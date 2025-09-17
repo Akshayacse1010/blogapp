@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -29,5 +30,13 @@ public class PostService {
     public List<Post> getPostsByAuthor(Long id)
     {
        return postRepository.findAllByAuthorId(id);
+    }
+
+    public Post updatePostByAuthorID(Long authorID, Long postID, Post requestPost)
+    {
+        Post post = postRepository.findByIdAndAuthorId(postID, authorID).orElseThrow(() -> new RuntimeException("Post not found with id"));
+        post.setContent(requestPost.getContent());
+        post.setTitle(requestPost.getTitle());
+        return postRepository.save(post);
     }
 }

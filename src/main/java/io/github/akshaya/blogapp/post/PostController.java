@@ -22,5 +22,9 @@ public class PostController {
     {
         return postService.getPostsByAuthor(id);
     }
-
+    @PutMapping("/authors/{authorId}/posts/{postId}")
+    public Post updatePostByAuthorID(@PathVariable Long authorId, @PathVariable Long postId, @RequestBody Post post)
+    {
+        return postService.updatePostByAuthorID(authorId, postId, post);
+    }
 }
