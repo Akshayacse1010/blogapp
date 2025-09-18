@@ -18,7 +18,7 @@ public class Author {
 
     /*The rule of thumb is to place @JsonIgnore on the @OneToMany (the "many" side) of the relationship. You've already done this correctly.*/
     @JsonIgnore
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author" , cascade = CascadeType.ALL)
     private List<Post> posts;
 
     public Author() {

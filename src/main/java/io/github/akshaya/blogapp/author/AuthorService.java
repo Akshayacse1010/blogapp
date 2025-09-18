@@ -11,6 +11,9 @@ Create a public method createAuthor(Author author) inside the service. This meth
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class AuthorService
 {
@@ -34,5 +37,28 @@ The error happens later, when the JSON converter tries to read the name and emai
     {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+    }
+    public List<Author> getAllAuthors()
+    {
+        return authorRepository.findAll();
+    }
+
+    public Author updateAuthorById(Long authorId, Author authorDetails)
+    {
+        Author author = authorRepository.findById(authorId).orElseThrow(()->new RuntimeException("no data for id author"));
+        if(author != null)
+        {
+            author.setName(authorDetails.getName());
+            author.setEmail(authorDetails.getEmail());
+            author.setPosts(authorDetails.getPosts());
+        }
+        assert author != null;
+        return authorRepository.save(author);
+    }
+
+    public void deleteAuthorById(Long authorId)
+    {
+        Author author = authorRepository.findById(authorId).orElseThrow(()->new RuntimeException("no data for id author"));
+        authorRepository.delete(author);
     }
 }
