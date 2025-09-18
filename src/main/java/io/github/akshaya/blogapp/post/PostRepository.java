@@ -1,7 +1,6 @@
 package io.github.akshaya.blogapp.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +22,5 @@ For our task, we want to find all Post entities by their author's ID. Let's look
 //   @Query(value = "SELECT p.* FROM posts p INNER JOIN authors a ON p.author_id = a.id WHERE a.id = :authorID and p.id = :postID", nativeQuery = true)
 //   Post findPostByAuthorID(Long authorID,Long postID);
 //The order of the parameters is wrong. Spring Data JPA is very strict about this. It expects the method's parameters to appear in the exact same order as the properties in the method name.
-   Optional<Post> findByIdAndAuthorId(Long authorId, Long PostId);
+   Optional<Post> findByIdAndAuthorId(Long postId ,Long authorId);
 }

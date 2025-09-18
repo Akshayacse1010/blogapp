@@ -39,4 +39,10 @@ public class PostService {
         post.setTitle(requestPost.getTitle());
         return postRepository.save(post);
     }
+
+    public void deletePostById(Long authorId, Long postId)
+    {
+        Post post = postRepository.findByIdAndAuthorId(postId ,authorId ).orElseThrow(() -> new RuntimeException("Post not found"));
+        postRepository.delete(post);
+    }
 }

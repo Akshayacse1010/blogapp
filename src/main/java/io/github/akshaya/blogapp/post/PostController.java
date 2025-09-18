@@ -27,4 +27,9 @@ public class PostController {
     {
         return postService.updatePostByAuthorID(authorId, postId, post);
     }
+    @DeleteMapping("/authors/{authorId}/posts/{postId}")
+    public void DeletePostByID(@PathVariable Long authorId, @PathVariable Long postId)
+    {
+        postService.deletePostById(authorId, postId);
+    }
 }
