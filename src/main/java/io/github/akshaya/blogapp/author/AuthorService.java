@@ -10,6 +10,7 @@ Inject the AuthorRepository into this service using constructor injection.
 Create a public method createAuthor(Author author) inside the service. This method should contain the logic that was previously in your controller: it should call authorRepository.save(author).*/
 
 import io.github.akshaya.blogapp.author.dto.AuthorDTO;
+import io.github.akshaya.blogapp.exception.ResourceNotFoundException;
 import io.github.akshaya.blogapp.mapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class AuthorService {
 The error happens later, when the JSON converter tries to read the name and email from this fake object. At that point, it finally goes to the database, finds that no author with that ID exists, and the system throws an exception, resulting in the generic 500 Internal Server Error.*/
     public AuthorDTO getAuthor(Long id)
     {
-        return ModelMapper.toAuthorDTO(authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found with id: " + id)));
+        return ModelMapper.toAuthorDTO(authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id)));
     }
 
     public List<AuthorDTO> getAllAuthors()
@@ -53,7 +54,7 @@ The error happens later, when the JSON converter tries to read the name and emai
 
     public AuthorDTO updateAuthorById(Long authorId, AuthorDTO authorDetails)
     {
-        Author author = authorRepository.findById(authorId).orElseThrow(() -> new RuntimeException("no data for id author"));
+        Author author = authorRepository.findById(authorId).orElseThrow(() -> new ResourceNotFoundException("no data for id author"));
         if (author != null)
         {
             author.setName(authorDetails.getName());
@@ -65,7 +66,7 @@ The error happens later, when the JSON converter tries to read the name and emai
 
     public void deleteAuthorById(Long authorId)
     {
-        Author author = authorRepository.findById(authorId).orElseThrow(() -> new RuntimeException("no data for id author"));
+        Author author = authorRepository.findById(authorId).orElseThrow(() -> new ResourceNotFoundException("no data for id author"));
         authorRepository.delete(author);
     }
 }

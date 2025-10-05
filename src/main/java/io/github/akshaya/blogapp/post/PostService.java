@@ -2,6 +2,7 @@ package io.github.akshaya.blogapp.post;
 
 import io.github.akshaya.blogapp.author.Author;
 import io.github.akshaya.blogapp.author.AuthorRepository; // FIX: Import AuthorRepository
+import io.github.akshaya.blogapp.exception.ResourceNotFoundException;
 import io.github.akshaya.blogapp.mapper.ModelMapper;
 import io.github.akshaya.blogapp.post.dto.PostDTO;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class PostService {
         // FIX: Use findById for safety and a clear error message
         Post post = ModelMapper.toPost(postDTO);
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + authorId));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + authorId));
 
         post.setAuthor(author);
         return ModelMapper.toPostDTO(postRepository.save(post));
@@ -40,12 +41,16 @@ public class PostService {
            PostDTO postDTO = ModelMapper.toPostDTO(post);
            postDTOList.add(postDTO);
        }
+       if(postDTOList.isEmpty())
+       {
+           throw new ResourceNotFoundException("no post found for this author");
+       }
         return postDTOList;
     }
 
     public PostDTO updatePostByAuthorID(Long authorID, Long postID, PostDTO requestPostDTO)
     {
-        Post post = postRepository.findByIdAndAuthorId(postID, authorID).orElseThrow(() -> new RuntimeException("Post not found with id"));
+        Post post = postRepository.findByIdAndAuthorId(postID, authorID).orElseThrow(() -> new ResourceNotFoundException("Post not found with id"));
         post.setContent(requestPostDTO.getContent());
         post.setTitle(requestPostDTO.getTitle());
         return ModelMapper.toPostDTO(postRepository.save(post));
@@ -53,7 +58,7 @@ public class PostService {
 
     public void deletePostById(Long authorId, Long postId)
     {
-        Post post = postRepository.findByIdAndAuthorId(postId ,authorId ).orElseThrow(() -> new RuntimeException("Post not found"));
+        Post post = postRepository.findByIdAndAuthorId(postId ,authorId ).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         postRepository.delete(post);
     }
 }
