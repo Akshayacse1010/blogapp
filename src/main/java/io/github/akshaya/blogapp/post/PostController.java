@@ -1,5 +1,6 @@
 package io.github.akshaya.blogapp.post;
 
+import io.github.akshaya.blogapp.post.dto.PostDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,19 +14,19 @@ public class PostController {
     }
 
     @PostMapping("/authors/{id}/posts")
-    public Post createPost(@PathVariable Long id, @RequestBody Post post)
+    public PostDTO createPost(@PathVariable Long id, @RequestBody PostDTO postDTO)
     {
-        return postService.createPost(post , id);
+        return postService.createPost(postDTO , id);
     }
     @GetMapping("/authors/{id}/posts")
-    public List<Post> getAllPostByAuthorID(@PathVariable Long id)
+    public List<PostDTO> getAllPostByAuthorID(@PathVariable Long id)
     {
         return postService.getPostsByAuthor(id);
     }
     @PutMapping("/authors/{authorId}/posts/{postId}")
-    public Post updatePostByAuthorID(@PathVariable Long authorId, @PathVariable Long postId, @RequestBody Post post)
+    public PostDTO updatePostByAuthorID(@PathVariable Long authorId, @PathVariable Long postId, @RequestBody PostDTO postDTO)
     {
-        return postService.updatePostByAuthorID(authorId, postId, post);
+        return postService.updatePostByAuthorID(authorId, postId, postDTO);
     }
     @DeleteMapping("/authors/{authorId}/posts/{postId}")
     public void DeletePostByID(@PathVariable Long authorId, @PathVariable Long postId)

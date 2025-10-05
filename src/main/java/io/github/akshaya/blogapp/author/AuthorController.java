@@ -1,5 +1,7 @@
 package io.github.akshaya.blogapp.author;
 import java.util.List;
+
+import io.github.akshaya.blogapp.author.dto.AuthorDTO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,24 +13,24 @@ public class AuthorController
     }
 
     @PostMapping("/authors")
-    public Author createAuthor(@RequestBody Author author)
+    public AuthorDTO createAuthor(@RequestBody AuthorDTO authorDTO)
     {
-        return authorService.createAuthor(author);
+        return authorService.createAuthor(authorDTO);
     }
 
     @GetMapping("/authors/{id}")
-    public Author getAuthor(@PathVariable Long id)
+    public AuthorDTO getAuthor(@PathVariable Long id)
     {
         return authorService.getAuthor(id);
     }
 
     @GetMapping("/authors")
-    public List<Author> getAllAuthors()
+    public List<AuthorDTO> getAllAuthors()
     {
         return authorService.getAllAuthors();
     }
     @PutMapping("/authors/{authorId}")
-    public Author updateAuthor(@PathVariable  Long authorId,@RequestBody Author authorDetails)
+    public AuthorDTO updateAuthor(@PathVariable  Long authorId,@RequestBody AuthorDTO authorDetails)
     {
         return authorService.updateAuthorById(authorId, authorDetails);
     }

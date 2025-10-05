@@ -2,8 +2,11 @@ package io.github.akshaya.blogapp.post;
 
 import io.github.akshaya.blogapp.author.Author;
 import io.github.akshaya.blogapp.author.AuthorRepository; // FIX: Import AuthorRepository
+import io.github.akshaya.blogapp.mapper.ModelMapper;
+import io.github.akshaya.blogapp.post.dto.PostDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,26 +21,34 @@ public class PostService {
         this.authorRepository = authorRepository;
     }
 
-    public Post createPost(Post post, Long authorId) {
+    public PostDTO createPost(PostDTO postDTO, Long authorId) {
         // FIX: Use findById for safety and a clear error message
+        Post post = ModelMapper.toPost(postDTO);
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + authorId));
 
         post.setAuthor(author);
-        return postRepository.save(post);
+        return ModelMapper.toPostDTO(postRepository.save(post));
     }
 
-    public List<Post> getPostsByAuthor(Long id)
+    public List<PostDTO> getPostsByAuthor(Long id)
     {
-       return postRepository.findAllByAuthorId(id);
+       List<Post> postList = postRepository.findAllByAuthorId(id);
+       List<PostDTO> postDTOList = new ArrayList<>();
+       for(Post post : postList)
+       {
+           PostDTO postDTO = ModelMapper.toPostDTO(post);
+           postDTOList.add(postDTO);
+       }
+        return postDTOList;
     }
 
-    public Post updatePostByAuthorID(Long authorID, Long postID, Post requestPost)
+    public PostDTO updatePostByAuthorID(Long authorID, Long postID, PostDTO requestPostDTO)
     {
         Post post = postRepository.findByIdAndAuthorId(postID, authorID).orElseThrow(() -> new RuntimeException("Post not found with id"));
-        post.setContent(requestPost.getContent());
-        post.setTitle(requestPost.getTitle());
-        return postRepository.save(post);
+        post.setContent(requestPostDTO.getContent());
+        post.setTitle(requestPostDTO.getTitle());
+        return ModelMapper.toPostDTO(postRepository.save(post));
     }
 
     public void deletePostById(Long authorId, Long postId)
